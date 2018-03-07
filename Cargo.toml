@@ -2,6 +2,3 @@
 name = "how-fast"
 version = "0.1.0"
 authors = ["Alex Crichton <alex@alexcrichton.com>"]
-
-[dependencies]
-remove_dir_all = "0.5"
