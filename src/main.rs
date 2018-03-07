@@ -1,39 +1,37 @@
 use std::fs;
-use std::io::{self, Write};
+use std::io;
 use std::path::Path;
 use std::process::Command;
 use std::time::{Duration, Instant};
 
 fn main() {
-    print!("A completely fresh checkout of the index takes...");
-    io::stdout().flush().unwrap();
+    println!("A completely fresh checkout of the index takes...");
     let start = Instant::now();
     let status = Command::new("cargo")
         .current_dir("snapshot")
         .arg("update")
         .env("CARGO_HOME", "tmp")
-        .output()
+        .status()
         .unwrap();
-    assert!(status.status.success());
+    assert!(status.success());
     print(start.elapsed());
     remove_dir_all("snapshot/tmp".as_ref());
 
-    print!("Cloning an index with a history of length 1 takes...");
-    io::stdout().flush().unwrap();
+    println!("Cloning an index with a history of length 1 takes...");
     let start = Instant::now();
     let status = Command::new("cargo")
         .current_dir("squashed")
         .arg("update")
         .env("CARGO_HOME", "tmp")
-        .output()
+        .status()
         .unwrap();
-    assert!(status.status.success());
+    assert!(status.success());
     print(start.elapsed());
     remove_dir_all("squashed/tmp".as_ref());
 }
 
 fn print(dur: Duration) {
-    println!(" {}.{:03}s", dur.as_secs(), dur.subsec_nanos() / 1_000_000);
+    println!("= {}.{:03}s", dur.as_secs(), dur.subsec_nanos() / 1_000_000);
 }
 
 fn remove_dir_all(p: &Path) {
