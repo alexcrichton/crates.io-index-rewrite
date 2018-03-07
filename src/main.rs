@@ -1,4 +1,5 @@
-use std::fs;
+extern crate remove_dir_all;
+
 use std::io::{self, Write};
 use std::process::Command;
 use std::time::{Duration, Instant};
@@ -15,7 +16,7 @@ fn main() {
         .unwrap();
     assert!(status.status.success());
     print(start.elapsed());
-    fs::remove_dir_all("snapshot/tmp").unwrap();
+    remove_dir_all::remove_dir_all("snapshot/tmp").unwrap();
 
     print!("Cloning an index with a history of length 1 takes...");
     io::stdout().flush().unwrap();
@@ -28,7 +29,7 @@ fn main() {
         .unwrap();
     assert!(status.status.success());
     print(start.elapsed());
-    fs::remove_dir_all("squashed/tmp").unwrap();
+    remove_dir_all::remove_dir_all("squashed/tmp").unwrap();
 }
 
 fn print(dur: Duration) {
