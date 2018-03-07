@@ -1,0 +1,5 @@
+[source.crates-io]
+replace-with = 'alex-squashed'
+
+[source.alex-squashed]
+registry = 'https://github.com/alexcrichton/crates.io-index-2018-03-06-squashed'
