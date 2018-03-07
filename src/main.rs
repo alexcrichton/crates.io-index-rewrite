@@ -15,6 +15,7 @@ fn main() {
         .unwrap();
     assert!(status.success());
     print(start.elapsed());
+    print_size("snapshot/tmp".as_ref());
     remove_dir_all("snapshot/tmp".as_ref());
 
     println!("Cloning an index with a history of length 1 takes...");
@@ -27,6 +28,7 @@ fn main() {
         .unwrap();
     assert!(status.success());
     print(start.elapsed());
+    print_size("squashed/tmp".as_ref());
     remove_dir_all("squashed/tmp".as_ref());
 }
 
@@ -74,4 +76,35 @@ fn remove_dir_all(p: &Path) {
         fs::set_permissions(p, perms)?;
         Ok(true)
     }
+}
+
+fn print_size(p: &Path) {
+    print!("= and takes up ");
+    let mut size = size(p);
+    if size < 1024 {
+        return println!("{}B", size);
+    }
+    size /= 1024;
+    if size < 1024 {
+        return println!("{}KB", size);
+    }
+    size /= 1024;
+    if size < 1024 {
+        return println!("{}MB", size);
+    }
+}
+
+fn size(p: &Path) -> u64 {
+    p.read_dir()
+        .unwrap()
+        .map(|e| e.unwrap())
+        .map(|e| {
+            let m = e.metadata().unwrap();
+            if m.file_type().is_dir() {
+                size(&e.path())
+            } else {
+                m.len()
+            }
+        })
+        .sum()
 }
